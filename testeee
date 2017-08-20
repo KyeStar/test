@@ -1,0 +1,933 @@
+// CONSTANTES DE MÓDULOS
+const config     = require('./config.json'),
+      Eris       = require('eris'),
+      Google     = require('google'),
+      Moment     = require('moment'),
+      Cheerio    = require('cheerio'),
+      Request    = require('request'),
+      Aesthetics = require('aesthetics'),
+      Fs         = require('fs'),
+      Jimp       = require('jimp');
+
+const Bot  = new Eris.CommandClient(config.token, {
+     disableEvents: {
+  CHANNEL_CREATE: true,
+  CHANNEL_DELETE: true,
+CHANNEL_UPDATE: true,
+GUILD_BAN_ADD: true,
+GUILD_BAN_REMOVE: true,
+GUILD_ROLE_CREATE: true,
+GUILD_ROLE_DELETE: true,
+GUILD_ROLE_UPDATE: true,
+GUILD_UPDATE: true,
+TYPING_START: true,
+MESSAGE_DELETE: true,
+MESSAGE_DELETE_BULK: true,
+MESSAGE_UPDATE: true
+},
+      	defaultImageFormat: 'png',
+      	defaultImageSize: 2048
+      }, {
+      	owner: `<@${config.owner}>`,
+        defaultHelpCommand: false,
+      	prefix: config.prefix,
+        name: config.name,
+      	defaultCommandOptions: {
+              caseInsensitive: true,
+              cooldown: 3000,
+              cooldownMessage: 'Cooldown de 3 segundos! :-)',
+              permissionMessage:'Você não tem permissões para isto 😕'
+          }
+      });
+
+      var bot    = Bot,
+          moment = Moment;
+      moment().format();
+  	moment.locale("pt-br");
+
+Bot.on("ready", () =>{
+
+console.log(`${Bot.user.username} ligado com sucesso!\nNumero de servidores que ${Bot.user.username} está: ${Bot.guilds.size}\nNome dos servidores que ${Bot.user.username} está:\n${Bot.guilds.map(g=> `${g.name} => ${g.memberCount}`).join('\n')}`);
+
+
+Bot.editStatus("dnd", {
+    name: `${config.prefix}help para ser feliz, Estou em ${Bot.guilds.size} Servers! :-)`,
+    type: 1,
+    url:"https://www.twitch.tv/ksuestar"
+  });
+
+})
+
+
+Bot.on("messageCreate", (msg) => {
+
+if(msg.author.bot) return
+if(msg.command){
+  console.log(`O ${msg.author.username} usou o comando ${msg.command.label}`);
+}
+if(msg.content.includes(':thinking:')) msg.addReaction(':thinking:');
+})
+
+//==============================================================================
+function Random(random){
+  return random[Math.floor(Math.random() * random.length)];
+}
+function RandomNumber(number){
+  return Math.floor(Math.random() * number);
+}
+
+function stats(guild, userID){
+  var status = guild.members.find(member => member.id == userID).status;
+  if (status == "online"){
+    return "Disponível"
+  } else if (status == "offline"){
+    return ("Afk/Invisivel")
+  } else if (status == "dnd"){
+    return ("Ocupado")
+  } else if (status == "idle"){
+    return ("Ausente")
+  }
+}
+
+
+function afks(guild){
+  var afkTimeout = guild.afkTimeout;
+  if (afkTimeout == "60"){
+    return "1 minuto"
+  } else if (afkTimeout == "300"){
+    return ("5 minutos")
+  } else if (afkTimeout == "900"){
+    return ("15 minutos")
+  } else if (afkTimeout == "1800"){
+    return ("30 minutos")
+  } else if (afkTimeout == "3600"){
+    return ("1 hora")
+  }
+}
+
+
+function verificationLevel(guild){
+var guildVerification = guild.verificationLevel;
+  if (guildVerification == "0") {
+      return "Nenhum";
+  } else if (guildVerification == "1") {
+      return "Baixo"
+  } else if (guildVerification == "2") {
+      return "Médio"
+  } else if (guildVerification == "3") {
+      return "Alto"
+  }
+}
+
+//==============================================================================
+bot.on("messageCreate", (msg) => {
+if(msg.content.includes("s!invite")) bot.getDMChannel(msg.author.id).then(dm => {bot.createMessage(dm.id, "**Opa, bom?** https://discordapp.com/oauth2/authorize?client_id=345298680359813131&scope=bot&permissions=8")});
+
+if(msg.content.includes("nudes")) bot.getDMChannel(msg.author.id).then(dm => {bot.createMessage(dm.id, "Opa, você disse nudes? rsrs")});
+
+if(msg.content.includes("bom dia")) bot.getDMChannel(msg.author.id).then(dm => {bot.createMessage(dm.id, "Opa, dormiu bem?")});
+
+if(msg.content.includes("boa noite")) bot.getDMChannel(msg.author.id).then(dm => {bot.createMessage(dm.id, "Opa, bons sonhos")});
+
+if(msg.content.includes("grr")) msg.addReaction('😡');
+
+if(msg.content.includes("melhor casal")) msg.channel.createMessage('http://www.berserkfan.cs-home.info/manga/kapitel/manga04/001.jpg');
+
+if(msg.content.includes("morreu")) msg.channel.createMessage('https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTeBwF6MeSKlrnL3KnkVdfm32UDDi0bkISw8wMmaOJzCJtg9ocgiA');
+
+if(msg.content.includes("lol")) msg.channel.createMessage('iiiih lolzero, fecha a rodinha glr');
+
+if(msg.content.includes("O que é a PK?")) msg.channel.createMessage('Um lugar onde a maldade sempre ira reinar');
+
+if(msg.content.includes("Joestar")) msg.channel.createMessage('ZA WARUDO **ZA WARUDO -o bot joga um rolo compressor na sua cabeça- ROADO RODADA MUDAMUDAMUDAMUDAMUDAMUDAMUDAMUDAMUDAMUDAMUDAMUDAMUDAMUDAMUDAMUDAMUDAMUDAMUDAMUDAMUDAMUDAMUDAMUDAMUDAMUDAMUDAMUDAMUDAMUDAMUDAMUDAMUDAMUDAMUDAMUDA MUDAAAAAAAAAAAAAAA WRYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYYY**');
+
+if(msg.content.includes("duelo")) msg.channel.createMessage('Cuidado com o Kaiju');
+
+if(msg.content.includes("db")) msg.channel.createMessage('O Clan Onde tem mais treta');
+
+if(msg.content.includes("DB")) msg.channel.createMessage('lixo');
+
+if(msg.content.includes("??")) msg.channel.createMessage('na duvida pergunte ao seu coração');
+
+if(msg.content.includes("e.e")) msg.channel.createMessage('**e.e**');
+
+if(msg.content.includes("Bom dia")) msg.channel.createMessage(`Opa, ${msg.author.mention} dormiu bem?`);
+
+if(msg.content.includes("boa noite")) msg.channel.createMessage(`Opa, ${msg.author.mention} dorme bem`);
+
+if(msg.content.includes("thx")) msg.channel.createMessage('http://gph.is/2kD6mnh');
+
+});
+
+//==============================================================================
+bot.registerCommand('call', (msg, args) =>{
+  if(!args.join(' ')) return 'Digite o nome do cargo'
+    var ment = msg.channel.guild.roles.find(role =>  role.name.toLowerCase() == args.join(' ').toLowerCase())
+   if(ment){
+     return ment.mention
+   }else{
+     return "Digite o cargo corretamente"
+   }
+}, {
+  description: 'este comando você escreve sem marcar o nome de um cargo marcavel',
+  usage: '[role name]'
+})
+//==============================================================================
+bot.registerCommand('ripme', msg => { return `https://ripme.xyz/${msg.mentions[0] ? msg.mentions[0].username : msg.author.username}`}, {
+  description: 'site em sua morte',
+  usage: '@user'
+})
+
+bot.registerCommand('me', (msg, args) => {
+	msg.channel.createMessage({
+	        embed: {
+	thumbnail: {url: msg.author.avatarURL},
+	        title: "Dale,eu sou o Star",
+	        description: "Aqui algumas informações sobre você",
+	        color: 0x008000,
+	        author: {
+	            name: msg.author.username,
+	            icon_url: msg.author.avatarURL
+	        },
+	        fields: [
+	            {
+	                name: "Info.",
+	                value: "Mlk joga pra crl",
+	                inline: true
+	            },
+	            {
+	                name: "Info.",
+	                value: "Ta de parabens",
+	                inline: true
+	            }
+	        ],
+	        footer: {
+	            text: "Created with S t a r." //ata po// massa
+						}
+				}
+		})
+	});
+//==============================================================================
+bot.registerCommand('say', (msg, args)=>{
+  var say     = args.join(' '),
+      message = '';
+
+  if(!say) return msg.addReaction('🤔')
+
+ switch (RandomNumber(6)) {
+   case 1:
+    message =  `__${say}__`
+    break;
+
+  case 2:
+    message =  `~~${say}~~`
+    break;
+
+  case 3:
+    message =  `**${say}**`
+    break;
+
+  case 4:
+    message =  `\`${say}\``
+    break;
+
+  default:
+  message =  `${say.split('').join(' ')}`
+ }
+ return message
+}, {
+usage: '[mensagem]',
+description: 'faça o bot dizer algo!',
+deleteCommand: true
+})
+//==============================================================================
+bot.registerCommand('rd', (msg, args) => {
+  var rd = parseInt(args.join(' '));
+
+  if(!rd)  return msg.addReaction('🤔')
+
+  return `${RandomNumber(rd)}`
+}, {
+  usage: '[Numero]',
+  description: 'dará um numero aleatório entre 0 e o numero que você escolheu'
+})
+
+//==============================================================================
+bot.registerCommand('serverinfo', (msg, args) => {
+  var guild = msg.channel.guild;
+
+msg.channel.createMessage({
+  embed: {
+    thumbnail: {url: (guild.iconURL)},
+    footer: {text: `Um pedido de ${msg.author.username}#${msg.author.discriminator}`, icon_url: msg.author.avatarURL},
+    color: RandomNumber(99999),
+    fields: [{
+    name: "Nome do server:",
+    value: guild.name,
+    inline: true
+  }, {
+    name: "Id do servidor:",
+    value: guild.id,
+    inline: true
+  }, {
+    name: 'Dono do servidor:',
+    value: guild.members.find(member=> member.id == guild.ownerID).mention,
+    inline: true
+  }, {
+    name: "Quantas pessoas no servidor:",
+    value: `👤 ${guild.members.filter(m=> !m.bot).length}\n🤖 ${guild.members.filter(b=> b.bot).length}`,
+    inline: true
+  }, {
+    name: 'Dia de criação do servidor:',
+    value: moment(guild.createdAt).format("LL"),
+    inline: true
+  }, {
+    name: 'Região do servidor:',
+    value: guild.region,
+    inline: true
+  }, {
+    name: "Limite de ausência:",
+    value: afks(guild),
+    inline: true
+  }, {
+    name: 'Nivel de verificação:',
+    value: verificationLevel(guild),
+    inline: true
+  }, {
+   name: "Data de quando entrei neste servidor:",
+   value: moment(guild.members.get(bot.user.id).joinedAt).format("LL"),
+   inline: true
+  }
+    ]
+  }
+})
+
+}, {
+  description: 'info do servidor'
+})
+//==============================================================================
+bot.registerCommand('help', msg => {
+  if(msg.channel.guild){
+    msg.channel.createMessage(`${msg.author.mention} Oba, olha DM :thumbsup:  `).then(message =>
+       setTimeout(function(){
+         message.delete();
+       }, 5000)
+     );
+  }
+    bot.getDMChannel(msg.author.id).then(dm => {
+    bot.createMessage(dm.id, `(nota: Todos os comando começam com${msg.prefix}(nome do comando)) **comandos:\n${msg.prefix}funcommands** mostra os comandos divertidos do bot\n**${msg.prefix}interações** mesma coisa que o >help só que de interações\n**${msg.prefix}staffercommands** igual >help só que de comandos da staff\n**${msg.prefix}serverinfo** use este comando em um chat de um servidor para ver a info\n**${msg.prefix}memes** tipo o comando >help só que os comandos de memes`)
+})
+
+})
+//==============================================================================
+var Funcommands = ['beijo', 'salve', 'suicidio', 'time', 'say', 'ripme', 'rd', 'votação', 'dicionário', 'search', 'serverinfo', 'mysoul', 'ship', 'cat', 'vp', 'uptime'];
+
+bot.registerCommand('Funcommands', msg => {
+  if(msg.channel.guild){
+    msg.channel.createMessage(`${msg.author.mention} Oba, olha DM :thumbsup:  `).then(message =>
+       setTimeout(function(){
+         message.delete();
+       }, 5000)
+     );
+  }
+  bot.getDMChannel(msg.author.id).then(dm => {
+  bot.createMessage(dm.id, `**Funcommands:**\n\`\`\`${Funcommands.map(fun=> `${bot.commands[fun].label} ${bot.commands[fun].usage} => ${bot.commands[fun].description}`).join('\n')}\`\`\``)
+})
+})
+//==============================================================================
+bot.registerCommand('beijo', msg => { return `beijo ${msg.author.mention}`}, {
+  description: 'give a kiss'
+})
+//==============================================================================
+bot.registerCommand('salve', msg => { return `salve ${msg.author.mention}`}, {
+  description: 'o bot manda salve'
+})
+//==============================================================================
+bot.registerCommand('suicidio', msg => { return `${msg.author.mention} cometeu suicidio http://hypescience.com/wp-content/uploads/2015/02/duble-pegando-fogo1.gif`}, {
+  description: '#flwmundo'
+})
+//==============================================================================
+bot.registerCommand('64dd', 'https://cdn.discordapp.com/attachments/258291263214845973/262299218289491980/unknown.png')
+//==============================================================================
+var memes = ['64dd ', 'micão' ,  'eu odeio portugueses mexicanos ',  'o jogo virou ',  'o loco ', 'jooj ',  'me mata ',  'qqtaconteceno? ',  'ãhn? ',  'stop ', 'pato ', 'literalmente um lixo ', 'isso aqui', 'anti-vacuo ', 'certamente que sim', 'water power', 'cachorro vs escada', 'top', ' bad', 'não conta', 'bulma top', 'flw' , 'et']
+bot.registerCommand('memes', msg => {
+  if(msg.channel.guild){
+    msg.channel.createMessage(`${msg.author.mention} Mandando Privado :thumbsup:  `).then(message =>
+       setTimeout(function(){
+         message.delete();
+       }, 5000)
+     );
+  }
+  bot.getDMChannel(msg.author.id).then(dm => {
+  bot.createMessage(dm.id, `https://cdn.discordapp.com/attachments/263906640607051786/265242046619582464/unknown.png\n\`\`\`${Funcommands.map(meme=> msg.prefix+meme).join('\n')}\`\`\``)
+})
+})
+//==============================================================================
+bot.registerCommand('micão', 'https://cdn.discordapp.com/attachments/229407342821769227/259367917043449856/le.jpg')
+//==============================================================================
+bot.registerCommand('euodeioportuguesesmexicanos', 'https://cdn.discordapp.com/attachments/229407342821769227/259366184321810443/unknown.png')
+//==============================================================================
+bot.registerCommand('ojogovirou', 'https://cdn.discordapp.com/attachments/229407342821769227/256259282041831424/Fodac_o_Nome.png.gif')
+//==============================================================================
+bot.registerCommand('oloco', 'https://cdn.discordapp.com/attachments/229407342821769227/262358592722698240/BuShisu.jpg')
+//==============================================================================
+bot.registerCommand('jooj', 'https://lh3.googleusercontent.com/-zraC2DHWV4o/Vdkzym-s-GI/AAAAAAAAAMQ/RmSKR6vRBfY/w480-h356-p-rw/15%252520-%2525202.gif')
+//==============================================================================
+bot.registerCommand('memata', 'https://cdn.discordapp.com/attachments/256118403914268673/259069221420400641/CzvudgeXcAI9j6D.png')
+//==============================================================================
+bot.registerCommand('qqtaconteceno?', 'https://cdn.discordapp.com/attachments/256118377444147201/262369966739685389/Cachorro.png')
+//==============================================================================
+bot.registerCommand('ãhn?', 'https://cdn.discordapp.com/attachments/227545632074629120/262370687040094209/Screenshot_47.png')
+//==============================================================================
+bot.registerCommand('=T', 'https://cdn.discordapp.com/attachments/227545632074629120/262382577472634890/Screenshot_34.png')
+//==============================================================================
+bot.registerCommand('stop', 'https://j.gifs.com/Nx1y12.gif')
+//==============================================================================
+bot.registerCommand('pato', 'https://cdn.discordapp.com/attachments/252952951587340288/262421847356735489/resized_JPEG_1470028658400_-403984820.jpg')
+//==============================================================================
+bot.registerCommand('literalmenteumlixo', 'https://giphy.com/gifs/prank-trashbag-n11QQatklZhaE')
+//==============================================================================
+bot.registerCommand('issoaqui', 'https://cdn.discordapp.com/attachments/229407342821769227/262958819179626496/eede.jpg')
+//==============================================================================
+bot.registerCommand('anti-vacuo', 'https://cdn.discordapp.com/attachments/262320341223866368/263265076323024896/Capitao_Anti-Vacuo.jpg')
+//==============================================================================
+bot.registerCommand('certamentequesim', 'https://j.gifs.com/ElQoXv.gif')
+//==============================================================================
+bot.registerCommand('waterpower', 'https://j.gifs.com/KO7918.gif')
+//==============================================================================
+var dog = ['https://losgifs.files.wordpress.com/2013/09/pug_82e5ef_4800417.gif', 'https://cdn.discordapp.com/attachments/269250764143067137/272001030336544778/cachorro-como-descer-escada.gif', 'http://2.bp.blogspot.com/-fUudOb5JKMg/TegZ9pJ493I/AAAAAAAAALo/IzzBoFNhPFw/s1600/bebe+descendo+a+escada.gif']
+bot.registerCommand('cachorrovsescada', Random(dog))
+//==============================================================================
+bot.registerCommand('top', 'https://cdn.discordapp.com/attachments/256562187575885834/265295074353479680/top.png')
+//==============================================================================
+bot.registerCommand('crush', msg => { return `${msg.author.mention} ama ${msg.mentions[0] ? msg.mentions[0].mention : 'sua mae'}`})
+//==============================================================================
+bot.registerCommand('coice', msg => {
+  if(!msg.mentions[0]) return msg.addReaction('🤔')
+  msg.channel.createMessage(`${msg.author.mention} deu um coice em ${msg.mentions[0].mention} http://cdn1.sempretops.com/wp-content/uploads/coice.gif`).then(message => setTimeout(function(){message.delete();}, 20000));
+})
+//==============================================================================
+var Interactions = ['crush', 'coice', 'shoot', 'jogar', 'call', 'profile', 'ship @alguém']
+bot.registerCommand('interações', msg => { return `**para usar um comando de interação use &(um tipo de interação a baixo) @(nome da pessoa para interagir)** \`\`\`\n${Interactions.map(int=> msg.prefix+int+' @alguém').join('\n')}\`\`\``})
+//==============================================================================
+var shoot = [':high_heel:', ':eggplant:', ':apple:', ':pear:', ':hamburger:', ':scissors:', ':camera:', ':iphone:', ':pick:', ':soccer:', ':basketball:', ':football:', ':baseball:', ':tennis:', ':8ball:', ':medal:', ':tickets:', ':microphone:', ':game_die:', ':saxophone:', ':drum:']
+bot.registerCommand('shoot', msg => { return `${msg.author.mention} jogou um ${Random(shoot)} em ${msg.mentions[0] ? msg.mentions[0].mention : msg.channel.guild.members.random().mention}`})
+//==============================================================================
+bot.registerCommand('batata', 'https://cdn.discordapp.com/attachments/256118377444147201/262369966739685389/Cachorro.png')
+//==============================================================================
+
+bot.registerCommand('profile', msg => {
+   var user  = msg.mentions[0] || msg.author,
+      member = msg.channel.guild.members.find(m=> m.id == user.id);
+
+   msg.channel.createMessage({
+     embed: {
+    thumbnail: {
+      url: (member.avatarURL)
+    },
+   footer: {
+     text: `A pedido de ${msg.author.username}#${msg.author.discriminator}`,
+     icon_url: msg.author.avatarURL
+   },
+  color: RandomNumber(9999),
+    fields: [{
+       name: 'Info de:',
+       value: member.username+"#"+member.discriminator,
+       inline: true
+  }, {
+       name: 'Status',
+       value: stats(msg.channel.guild, member.id),
+       inline: true
+  }, {
+       name: 'Jogo:',
+       value: member.game ? member.game.name : 'Nada',
+       inline: true
+  }, {
+       name: 'Bot:',
+       value: member.bot ? 'Esta conta é um bot' : 'Esse usuário não é um bot',
+       inline: true
+  }, {
+       name: 'Criação da conta:',
+       value: 'Dia '+moment(member.createdAt).format("LL"),
+       inline: true
+  }, {
+       name: 'Entrou no servidor:',
+       value: 'Dia '+moment(member.joinedAt).format("LL"),
+       inline: true
+  }, {
+      name: 'Cargos:',
+      value: member.roles ? member.roles.map(role=>  msg.channel.guild.roles.get(role).name).join(', ') : 'o usuário não tem cargos',
+      inline: true
+  }]
+}
+});
+
+})
+//==============================================================================
+function time(format){
+  return moment().format(format)
+}
+bot.registerCommand('time', `**Data:** Dia \`${time('LL')}\`\n**Dia da semana:** \`${time('dddd')}\`\n**Hora:** \`${time('LTS')}\`\n**Dia começou a** \`${moment().startOf('day').fromNow()}\`\n**Dia vai terminar** \`${moment().endOf('day').fromNow()}\``, {
+  description: 'mostra a hora'
+})
+
+//==============================================================================
+bot.registerCommand('bad', 'http://giphy.com/gifs/headlikeanorange-hippo-aUovxH8Vf9qDu')
+//==============================================================================
+bot.registerCommand('nãoconta', 'https://cdn.discordapp.com/attachments/263906640607051786/273905196902514689/Screenshot_206.png')
+//==============================================================================
+bot.registerCommand('bulmatop', 'https://cdn.discordapp.com/attachments/263906640607051786/273534642467110912/Bulma_top.png')
+//==============================================================================
+bot.registerCommand('flw', 'https://cdn.discordapp.com/attachments/263906640607051786/274233669085036544/velberan_falooou.png')
+//==============================================================================
+bot.registerCommand('et', 'https://cdn.discordapp.com/attachments/263906640607051786/274992685406748682/RENATINHO.gif')
+//==============================================================================
+bot.registerCommand('ata', msg => {
+
+  if(RandomNumber(10) > 5) return '```css\nata\n```'
+
+var ata  = ['**', '__', '~~', '\`'],
+    ata2 = Random(ata);
+ return ata2+'ata'+ata2
+})
+//==============================================================================
+var alma = ["Você tem a alma de **UNDYNE**! Valente, imortal e faz tudo por seus amigos, até mesmo a morte\n( http://i1.kym-cdn.com/photos/images/original/001/058/242/eec.png )", "Você tem a alma de **Toriel**! Carinhosa, calma e só de vez em quando abominavel\n( https://s-media-cache-ak0.pinimg.com/736x/7d/42/83/7d428362023f8bb56e5a3cf3ab4c2e29.jpg )", "Você tem a alma de **Sans**! Um bom amigo, ou talvez já foi um, tem gosto por preguissa e quando preciso se vinga de certas coisas\n( http://img11.deviantart.net/8209/i/2015/360/8/a/sans__undertale__by_elimate98-d9lm71g.png )", "Você tem a alma de **Papyrus**! Uma boa pessoa e ajuda sempre que pedem, seu coração suspira amizade\n( http://images6.fanpop.com/image/photos/39100000/Papyrus-undertale-the-game-39127030-2000-2000.png )", "Você tem a alma de **Mettaton**! Gosta de ser o 'centro das atenções' mas gosta de entreter os outros com humor, técnica ou qualquer outra coisa que você acredite!\n( http://images.8tracks.com/cover/i/009/845/384/mettaton_by_kotikomori-d9m7d2h-1-3830.jpg?rect=0,0,1000,1000&q=98&fm=jpg&fit=max )", "Você é uma pessoa valente e corajosa, como a **alma laranja 'Bravura'**. É animada, esforçada e faz de tudo para proteger os amigos!\n( https://cdn.discordapp.com/attachments/262316008562360320/288783550868750347/laranja.png )", "Assim como a **alma azul claro**, você é Paciente. Uma pessoa, obviamente, calma, tranquila e equilibrada. Ao mesmo tempo, é uma pessoa segura e persistente e não desiste fácil das coisas!\n( https://cdn.discordapp.com/attachments/262316008562360320/288783503389097984/azul_claro.png )", "Você é uma pessoa pura e inocente, assim como a **alma azul escura/Integridade**. Tem vezes que é muito ingênua, mas ainda assim é carinhosa e respeitosa com as pessoas!\n( https://cdn.discordapp.com/attachments/262316008562360320/288783515972141056/azul.png )", "Bondade Você se parece muito com a **alma verde**: Bondade. Uma pessoa gentil, amigável, educada e delicada. Uma pessoa mais simples que as outras.\n( https://cdn.discordapp.com/attachments/262316008562360320/288783601951047680/verde.png )", "Você é **Perseverança a alma roxa** se parece muito com você. É uma pessoa dedicada, inteligente, persistente e corajosa. Tem paixão pelas palavras e por livros que te prendam nas histórias!\n( https://cdn.discordapp.com/attachments/262316008562360320/288783567675457546/roxo.png )", "A **alma amarela 'Justiça'** é a sua cara. É muito honesta e um pouco impaciente. Mas mesmo com esse jeito, todos gostam de você!\n( https://cdn.discordapp.com/attachments/262316008562360320/288783493453053952/amarelo.png )"];
+
+var alma2 = ['Você me parece com a **alma vermelha a determinação** você é... espere, VOCÊ É FRISK? OMG ME DA UM AUTOGRAFO', "Você se parece com a... wait... você me parece com char- MEU DEUS É A **CHARA** CORRE GENTE", "Você tem a alma de **Flowey**! E oohhh it's flowey, omfg it's flowey, i will gonna out of there and never back ok?"],
+    img   = ['http://images6.fanpop.com/image/photos/39100000/Papyrus-undertale-the-game-39127030-2000-2000.png', 'https://cdn.discordapp.com/attachments/262316008562360320/288783696259973130/frisk.png', 'https://cdn.discordapp.com/attachments/262316008562360320/288783537199382529/chara.png']
+bot.registerCommand('mysoul', msg => {
+
+  function MySoul(say, test, image){
+  return  msg.channel.createMessage("Hmmm").then(msg => setTimeout(function(){msg.delete();}, 15000)).then(()=>{
+    msg.channel.sendTyping(1)
+    setTimeout(function(){
+    msg.channel.createMessage(say).then(msg => setTimeout(function(){msg.delete();}, 15000));
+    setTimeout(function(){
+    if(test == true ) msg.channel.createMessage(image).then(msg => setTimeout(function(){msg.delete();}, 15000));
+    },2000);
+
+    },2000);
+  })
+  }
+
+var souls = RandomNumber(100);
+if(souls <= 99){
+  return MySoul(Random(alma), false, alma)
+}else{
+  return MySoul(Random(alma2), true, img)
+}
+}, {
+  description: 'Show your soul!'
+})
+//==============================================================================
+var cmdStaffer = ['clear', 'kick', 'ban', 'addcarg', 'revcarg']
+bot.registerCommand('staffercommands', msg =>{ return `\`\`\`Para usar estes comandos é preciso permissões especificas do servidor\`\`\`\n${cmdStaffer.map(stf=> '**'+msg.prefix+bot.commands[stf].label+' '+bot.commands[stf].usage+'** '+bot.commands[stf].description).join('\n')}`})
+//==============================================================================
+bot.registerCommand('remember', (msg, args) => {
+  var args   = parseInt(args.join(' '));
+
+  if(!args || args > 1440 || args < 1) return 'Defina um número de 1 até 1440 (24h)'
+
+  msg.channel.createMessage("Ok irei lembrar ;D").then(msg => setTimeout(function(){msg.delete();}, 10000));
+
+  setTimeout(function(){
+  bot.getDMChannel(msg.author.id).then(dm => {
+    bot.createMessage(dm.id, `O remember de ${args} minutos acabou!`)});
+  },args * 60000);
+}, {
+  usage: '[um tempo em minutos]',
+  description: 'o bot te lembrará de algo quando acabar o tempo que você escolheu'
+})
+//==============================================================================
+bot.registerCommand('kick', msg => {
+
+  if(!msg.mentions[0]) return msg.addReaction('🤔')
+  if(msg.channel.guild.members.get(msg.mentions[0].id).permission.has('kickMembers')) return `Não foi possivel kickar **${msg.mentions[0].username}**`
+
+msg.channel.guild.kickMember(msg.mentions[0].id)
+msg.channel.createMessage(`**${msg.mentions[0].username}** foi kickado com sucesso! https://i.ytimg.com/vi/AJLoAeHVq1I/maxresdefault.jpg`)
+}, {
+    usage: '[@alguém]',
+  description:'kicka a pessoa mencionada, só funciona caso você possa kickar',
+  requirements: {
+    permissions: {'kickMembers': true}
+  }
+})
+//==============================================================================
+bot.registerCommand('ban', msg => {
+  if(!msg.mentions[0]) return msg.addReaction('🤔')
+  if(msg.channel.guild.members.get(msg.mentions[0].id).permission.has('banMembers')) return `Não foi possivel banir **${msg.mentions[0].username}**`
+msg.channel.guild.kickMember(msg.mentions[0].id)
+msg.channel.createMessage(`**${msg.mentions[0].username}** foi banido com sucesso! https://i.ytimg.com/vi/AJLoAeHVq1I/maxresdefault.jpg`)
+}, {
+  usage: '[@alguém]',
+  description:'bane  a pessoa mencionada, só funciona caso você possa banir',
+  requirements: {
+    permissions: {'banMembers': true}
+  }
+})
+//==============================================================================
+bot.registerCommand('calc', (msg, args) =>{
+
+  var calc = args.join(' ');
+    if(!calc || (typeof(calc)) !== 'number') return msg.addReaction('🤔')
+
+    msg.channel.createMessage(eval(calc))
+
+})
+
+//==============================================================================
+bot.registerCommand('meuservidores', bot.guilds.map(guild=> guild.name+' '+guild.memberCount))
+//==============================================================================
+bot.registerCommand('reverse', (msg, args) => {
+  var rev = args.join(' ');
+
+  if(!rev){
+    return  msg.addReaction('🤔')
+  }else{
+    return rev.split("").reverse().join("")
+  }
+})
+//==============================================================================
+bot.registerCommand('clear', (msg, args) => {
+   var args = parseInt(args.join(' '));
+
+   if(!args){
+     return  msg.addReaction('🤔')
+   }else if(args > 1500){
+     return "O max de clear é 1500 mensagens 😕"
+   }else{
+     msg.channel.purge(args)
+     msg.channel.createMessage(`Deletado ${args} mensagem!`)
+   }
+
+}, {
+  usage: '[numero de 1-99]',
+  description:' deleta um numero de msgs de acordo com oque você pede (precisa da permissão de deletar mensagens/gerenciar canal)',
+  requirements: {
+    permissions: {'manageMessages': true}
+  }
+})
+
+//==============================================================================
+bot.registerCommand('votação', (msg, args) => {
+
+  if(!args.join(' ')) return 'Você precisa falar o titulo da votação'
+
+  msg.channel.createMessage({
+    embed: {
+      title: 'Votação iniciada por '+msg.author.username,
+      description: args.join(' ')
+    }
+  }).then(m => m.addReaction('👍').then(m.addReaction('👎').then(m.addReaction('🤷'))));
+
+}, {
+  usage: '[uma pergunta]',
+  description: 'faz uma votação'
+})
+
+//==============================================================================
+bot.registerCommand('dicionário', (msg, args) => {
+  if(!args.join(' ')) return  msg.addReaction('🤔');
+
+  msg.channel.createMessage({
+    embed: {
+      image: {
+        url: ("https://s.dicio.com.br/" + encodeURI(args.join(' ')) +".jpg")
+      }
+    }
+  });
+}, {
+  description: 'faz uma pesquisa no dicionário'
+})
+
+//==============================================================================
+bot.registerCommand('wikipedia', (msg, args) => {
+if(!args.join(' ')) return  msg.addReaction('🤔');
+
+return "https://pt.wikipedia.org/wiki/"+encodeURI(args.join(' '))
+})
+
+//==============================================================================
+bot.registerCommand('rate', (msg, args) => {
+  if(!args.join(' ')) return  msg.addReaction('🤔');
+
+  return `:thinking: ${args.join(' ')} ${RandomNumber(10)}/10`
+})
+
+//==============================================================================
+bot.registerCommand('ping', (msg, args) => {
+  msg.channel.createMessage('Pinging...').then(message => {message.edit(`PONG! :ping_pong:  ${message.timestamp - msg.timestamp}ms`)});
+})
+
+//==============================================================================
+bot.registerCommand('ship', (msg, args) => {
+
+    if(!msg.mentions[0]) return `Você não mencionou ninguém.`
+
+    var user      =  msg.mentions[1] ? msg.mentions[0]. username : msg.author.username,
+        user2     = msg.mentions[1] ? msg.mentions[1]. username : msg.mentions[0].username,
+
+        ShipName  = user.split("").reverse().join(""), //ata
+        ShipNameL = ShipName.slice(ShipName.length/2), // ultimo
+        ShipNameK = ShipNameL.split("").reverse().join(""),//trollei
+        ShipNameZ = user2.slice(user2.length/2), //trollei2
+
+        ShipFinale= ShipNameK+ShipNameZ,//potatofinal
+        random    = [":broken_heart: **"+ShipFinale+" Parece que o amor deles não é tão grande =/** :broken_heart:", ":neutral_face:  **"+ShipFinale+" Parece que eles são só conhecidos** :neutral_face:", ":shrug:  **"+ShipFinale+" Parece que eles são colegas de classe/amigos** :shrug:", ":smile: **"+ShipFinale+" Parece que eles são bons e velhos amigos** :smile:", ":heart_eyes: **"+ShipFinale+" Parece que eles são um bom casal** :heart_eyes:", ":heartpulse: **"+ShipFinale+" Parece que eles são o casal perfeito** :heartpulse:"];
+
+var  Ship = random[Math.floor(Math.random() * random.length)];
+
+msg.channel.createMessage(`:heart: **HMM será que temos um casal aqui?** :heart:\n \`${user}\`\n\`${user2}\`\n${Ship}`)
+}, {
+  usage: '[@alguém] [@alguém]',
+  description: 'faz um ship entre essas duas pessoas'
+})
+
+//==============================================================================
+bot.registerCommand('search', (msg, args) => {
+  var pesquisar = args.join(' ');
+
+ if(!pesquisar) return  msg.addReaction('🤔');
+
+  Google(pesquisar, function (err, res){
+    if(err) return  msg.addReaction('🤔') && console.error(err.stack)
+
+    for (var i = 0; i < 1; ++i) {
+           var link = res.links[i];
+           Google.Lang = 'pt-BR'
+           Google.Tld = 'pt-BR'
+           Google.NextText = 'Weiter'
+           console.log(link.title + ' - ' + link.href)
+           console.log(link.description + "\n")
+           msg.channel.createMessage({embed:{ author: { name: "Aqui está a pesquisa sobre: "+ link.title}}}).then(msg => setTimeout(function(){msg.delete();}, 75000));
+           msg.channel.createMessage(link.href);
+     }
+  })
+}, {
+  usage: '[alguma pergunta ou palavra chave]',
+  description: 'vai pesquisar no google'
+})
+
+//==============================================================================
+bot.registerCommand('addcarg', (msg, args) => {
+   if(!args.join(' ')) return  msg.addReaction('🤔');
+   if(!msg.mentions[0]) return `Você não mencionou ninguém.`
+
+  var role = msg.channel.guild.roles.find(name => name.name.toLowerCase() == args.join(' ').split(' ')[2].toLowerCase());
+
+  if(!role){
+     return 'Acho que este cargo não existe'
+}else{
+  msg.channel.guild.members.get(msg.mentions[0].id).addRole(role.id)
+  msg.channel.createMessage("Feito :wink: ")
+}
+
+}, {
+  requirements: {
+    permissions: {'manageRoles': true}
+  },
+  usage: '[@alguém]',
+  description: 'vai adicionar um cargo a pessoa mencionada '
+})
+
+//==============================================================================
+bot.registerCommand('revcarg', (msg, args) => {
+   if(!args.join(' ')) return  msg.addReaction('🤔');
+   if(!msg.mentions[0]) return `Você não mencionou ninguém.`
+
+  var role = msg.channel.guild.roles.find(name => name.name.toLowerCase() == args.join(' ').split(' ')[2].toLowerCase());
+
+  if(!role){
+     return 'Acho que este role não existe'
+}else{
+  msg.channel.guild.members.get(msg.mentions[0].id).removeRole(role.id)
+  msg.channel.createMessage("Feito :wink: ")
+}
+
+}, {
+  requirements: {
+    permissions: {'manageRoles': true}
+  },
+  usage: '[@alguém]',
+  description: 'vai remover um cargo a pessoa mencionada '
+})
+
+//==============================================================================
+bot.registerCommand("supermute", (msg, args) => {
+     var time = args.join(' ').split(msg.mentions[0].mention).join(' ');
+     if(!args.join(' ') || !parseInt(time)) return  msg.addReaction('🤔');
+     if(!msg.mentions[0]) return `Você não mencionou ninguém.`
+
+     msg.channel.guild.channels.forEach(c => {c.editPermission(msg.mentions[0].id, 0, 2048, 'member')});
+     setTimeout(function(){
+     msg.channel.guild.channels.forEach(c => {c.editPermission(msg.mentions[0].id, 0, 0, 'member')});
+   },time * 60000);
+
+}, {
+  requirements: {
+    permissions: {'manageMessages': true}
+  }
+})
+
+//==============================================================================
+bot.registerCommand('cat', msg => {
+  var cat = RandomNumber(1000)+1000
+  if(cat < 1001) return
+  msg.channel.createMessage({
+    embed: {
+      image: {
+        url: ("http://lorempixel.com/"+cat+"/"+cat+"/cats/")
+      }
+      }
+      })
+}, {
+  description: 'GATOS'
+})
+
+//==============================================================================
+bot.registerCommand('restart', msg => {
+  msg.channel.createMessage("O SEU VIADO TAVA NA PAZ AQUI E VOCÊ PEDIO PRA EU REINICIA MAS BLZ VO REINICIA");
+  bot.disconnect({reconnect: "auto"});
+}, {
+  requirements: {
+    userID: [config.owner]
+  }
+})
+
+//==============================================================================
+bot.registerCommand('off', msg => {
+  msg.channel.createMessage("Falou gente ;-");
+  bot.disconnect();
+}, {
+  requirements: {
+    userID: [config.owner]
+  }
+})
+
+  //============================================================================
+bot.registerCommand('uptime', msg => {
+      var tempo = moment(bot.uptime).format('LTS')
+      var timeup = tempo.split(':')
+      var horas = timeup[0]+" horas, "
+      var minutos = timeup[1]+" minutos, "
+      var segundos = timeup[2]+" segundos"
+      if(horas == '00 horas, '){
+          var horas = ''
+      }
+      if(minutos == '00 minutos, '){
+          var minutos = ''
+      }
+      if(segundos == '00 segundos'){
+          var segundos = ''
+      }
+      var uptime = horas+minutos+segundos
+   return `eu fui ligado a${uptime ? ' '+uptime : 'gora'}`
+
+  }, {
+    description: 'hora que eu acordei'
+  });
+
+  //============================================================================
+  bot.registerCommand('vp', (msg, args)=> {
+
+var ata = args.join(" "),
+    oto = ata.split("`").join(""),
+    oto = oto.split("*").join(""),
+    oto = oto.split("~").join(""),
+    oto = oto.split("_").join(""),
+    ete = oto.split(":").join("");
+
+ return Aesthetics(ete);
+  }, {
+    usage: '[texto]',
+    description: 'Aesthetics'
+  })
+  //============================================================================
+  bot.registerCommand('sharedguilds', msg => {
+    if(msg.mentions[0]) return 'Não posso fazer isto porque seria invasão de privacidade dizer servidores que ele está sem sua permissão'
+
+    bot.getDMChannel(msg.author.id).then(dm => {
+      bot.createMessage(dm.id, '**Nome das guilds que tenho em comum com você (são '+bot.guilds.filter(guild => guild.members.find(member => member.id == msg.author.id)).length+' guilds)**')});
+bot.guilds.filter(guild => guild.members.find(member => member.id == msg.author.id)).forEach(guild => bot.getDMChannel(msg.author.id).then(dm => {
+      bot.createMessage(dm.id, bot.getDMChannel(msg.author.id).then(dm => {
+      bot.createMessage(dm.id, guild.name+' com '+guild.memberCount+' pessoas')
+    })
+  )
+})
+);
+})
+
+//============================================================================
+bot.registerCommand('cargid', (msg, args) => {
+  var role = msg.channel.guild.roles.find(name => name.name.toLowerCase() == args.join(' ').toLowerCase());
+
+  if(role){
+    return role.id
+  }else{
+    return "Digite o cargo corretamente"
+  }
+})
+
+
+bot.on("guildMemberAdd", (guild, member) => { // When a member joins a guild
+    var response = `Wow, seja bem-vindo (a) *-* ${member.mention} A ${guild.name}!`;
+
+    bot.createMessage(guild.defaultChannel.id, response);    // Send the response in the guild's default channel
+});
+
+//=========================================================================================================
+
+bot.on("guildMemberRemove", (guild, member) => { // When a member leaves a guild
+    var response = `**Pessoal da ${guild.name} Vai sentir saudades** @${member.user.username}!`;
+    bot.createMessage(guild.defaultChannel.id, response);
+});
+
+
+//============================================================================
+
+bot.registerCommand('eval', (msg, args) => {
+  var Eval = args.join(' ');
+     try{
+
+       msg.channel.createMessage({
+         embed: {
+        author: {name: 'Sucess!'},
+        title: '📥 Input:',
+        description: `\`\`\`js\n${Eval}\n\`\`\``,
+        color: 0x00FF00,
+        fields: [
+          {
+          name: '📤 Output:',
+          value: `\`\`\`js\n${eval(Eval)}\n\`\`\``
+        }]
+         }
+       })
+
+     }catch(err){
+
+       msg.channel.createMessage({
+         embed: {
+        author: {
+          name: 'Error!'
+        },
+        title: '📥 Input:',
+        description: `\`\`\`js\n${Eval}\n\`\`\``,
+        color: 0xFF0000,
+        fields: [
+          {
+          name: `📤 Output: ${err.name}`,
+          value: `\`\`\`js\n${err.message}\n\`\`\``
+        }]
+         }
+       })
+     }
+},
+{
+  aliases: ['execute', 'e', 'E'],
+  requirements: {
+    userID: ['240997010121949184']
+  }
+})
+
+bot.connect();
